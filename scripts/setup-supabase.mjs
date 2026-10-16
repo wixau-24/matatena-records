@@ -102,3 +102,4 @@ await seedViaSupabaseRest();
 if (!migrated) {
   console.log('✓ Respaldo local y cliente Supabase listos.');
 }
+

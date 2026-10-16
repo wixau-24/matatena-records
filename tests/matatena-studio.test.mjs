@@ -80,3 +80,4 @@ describe('Matatena Records — Modelo de Negocio y Motor de Reservas', () => {
     expect(countByCat('software')).toBe(2);
   });
 });
+

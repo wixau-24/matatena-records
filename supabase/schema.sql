@@ -83,3 +83,4 @@ create policy "matatena_bookings_public_all"
   on public.matatena_bookings for all
   using (true)
   with check (true);
+

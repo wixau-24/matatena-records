@@ -257,3 +257,4 @@ export function InteractiveMatatenaBoard({ onSelectRound }) {
     </div>
   );
 }
+

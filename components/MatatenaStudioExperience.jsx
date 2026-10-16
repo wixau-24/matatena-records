@@ -10,6 +10,7 @@ import {
   formatMxn
 } from '../lib/matatena-catalog.js';
 import { calculateQuote, computeDayAvailability } from '../lib/booking-engine.js';
+import { fetchStudioDataClient, submitBookingClient } from '../lib/client-data.js';
 import { InteractiveMatatenaBoard, MatatenaJackIcon } from './MatatenaJackIcon.jsx';
 
 function getTodayIso() {
@@ -52,12 +53,11 @@ export default function MatatenaStudioExperience({ initialBundle }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [createdBooking, setCreatedBooking] = useState(null);
 
-  // Sincronización con API en vivo
+  // Sincronización con API / Supabase en vivo
   useEffect(() => {
     async function refreshStudioData() {
       try {
-        const res = await fetch('/api/studio', { cache: 'no-store' });
-        const data = await res.json();
+        const data = await fetchStudioDataClient();
         if (data?.ok) {
           if (data.settings) setSettings(data.settings);
           if (Array.isArray(data.gear)) setGearList(data.gear);
@@ -133,32 +133,23 @@ export default function MatatenaStudioExperience({ initialBundle }) {
         .filter((g) => selectedGearIds.includes(g.id))
         .map((g) => g.name);
 
-      const response = await fetch('/api/studio', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tierId: selectedTierId,
-          extraHours,
-          bookingDate,
-          startHour,
-          customerName,
-          customerPhone,
-          customerEmail,
-          projectName,
-          attendeesCount,
-          ageGroup,
-          selectedGear: selectedGearNames,
-          eventDetails
-        })
+      const booking = await submitBookingClient({
+        tierId: selectedTierId,
+        extraHours,
+        bookingDate,
+        startHour,
+        customerName,
+        customerPhone,
+        customerEmail,
+        projectName,
+        attendeesCount,
+        ageGroup,
+        selectedGear: selectedGearNames,
+        eventDetails
       });
 
-      const result = await response.json();
-      if (!response.ok || !result.ok) {
-        throw new Error(result.error || 'No se pudo registrar la reservación.');
-      }
-
-      setCreatedBooking(result.booking);
-      setBookings((prev) => [...prev, result.booking]);
+      setCreatedBooking(booking);
+      setBookings((prev) => [...prev, booking]);
     } catch (err) {
       setErrorMessage(err.message || 'Ocurrió un error al procesar tu solicitud.');
     } finally {
@@ -1245,3 +1236,4 @@ export default function MatatenaStudioExperience({ initialBundle }) {
     </div>
   );
 }
+

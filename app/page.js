@@ -1,10 +1,12 @@
 import React from 'react';
 import MatatenaStudioExperience from '../components/MatatenaStudioExperience.jsx';
-import { getStudioBundle } from '../lib/store.js';
+import { DEFAULT_GEAR_CATALOG, DEFAULT_STUDIO_SETTINGS } from '../lib/matatena-catalog.js';
 
-export const dynamic = 'force-dynamic';
-
-export default async function HomePage() {
-  const initialBundle = await getStudioBundle();
+export default function HomePage() {
+  const initialBundle = {
+    settings: DEFAULT_STUDIO_SETTINGS,
+    gear: DEFAULT_GEAR_CATALOG,
+    bookings: []
+  };
   return <MatatenaStudioExperience initialBundle={initialBundle} />;
 }

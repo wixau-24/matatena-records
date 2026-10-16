@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { formatMxn } from '../../lib/matatena-catalog.js';
+import { runAdminActionClient } from '../../lib/client-data.js';
 import { MatatenaJackIcon } from '../../components/MatatenaJackIcon.jsx';
 
 export default function AdminDashboardPage() {
@@ -26,19 +27,7 @@ export default function AdminDashboardPage() {
   const [blockReason, setBlockReason] = useState('Sesión interna / Mantenimiento');
 
   async function callAdminApi(payload) {
-    const res = await fetch('/api/admin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-admin-password': password
-      },
-      body: JSON.stringify({ ...payload, password })
-    });
-    const data = await res.json();
-    if (!res.ok || !data.ok) {
-      throw new Error(data.error || 'Error en operación de administrador.');
-    }
-    return data;
+    return runAdminActionClient({ ...payload, password });
   }
 
   async function handleLogin(e) {
@@ -651,3 +640,4 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
