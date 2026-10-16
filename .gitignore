@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+build/
+
+# Environment variables (NEVER commit secrets)
+.env
+.env.*
+!.env.example
+
+# Local runtime data
+.matatena-local/
+
+# Debug & OS
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+*.pem
+coverage/
